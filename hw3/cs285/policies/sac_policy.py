@@ -40,7 +40,11 @@ class MLPPolicySAC(MLPPolicy):
 
     def get_action(self, obs: np.ndarray, sample=True) -> np.ndarray:
         # TODO: return sample from distribution if sampling
-        # if not sampling return the mean of the distribution 
+        # if not sampling return the mean of the distribution
+        if self.discrete:
+            pass
+        else:
+
         return action
 
     # This function defines the forward pass of the network.

@@ -11,6 +11,8 @@ from cs285.policies.sac_policy import MLPPolicySAC
 from cs285.critics.sac_critic import SACCritic
 import cs285.infrastructure.pytorch_util as ptu
 
+from cs285.infrastructure.sac_utils import soft_update_params
+
 class SACAgent(BaseAgent):
     def __init__(self, env: gym.Env, agent_params):
         super(SACAgent, self).__init__()
@@ -50,7 +52,11 @@ class SACAgent(BaseAgent):
         # 1. Compute the target Q value. 
         # HINT: You need to use the entropy term (alpha)
         # 2. Get current Q estimates and calculate critic loss
-        # 3. Optimize the critic  
+        # 3. Optimize the critic
+
+        with torch.no_grad():
+
+
         return critic_loss
 
     def train(self, ob_no, ac_na, re_n, next_ob_no, terminal_n):
@@ -68,11 +74,20 @@ class SACAgent(BaseAgent):
 
         # 4. gather losses for logging
         loss = OrderedDict()
-        loss['Critic_Loss'] = TODO
-        loss['Actor_Loss'] = TODO
+        for _ in range(self.agent_params["num_critic_updates_per_agent_update"]):
+            loss['Critic_Loss'] = TODO
+
+        if self.training_step % self.agent_params["critic_target_update_frequency"]:
+            soft_update_params(self.critic, self.critic_target, self.critic_tau)
+
+        for _ in range(self.agent_params["num_actor_updates_per_agent_update"]):
+            loss['Actor_Loss'] = TODO
+
+
         loss['Alpha_Loss'] = TODO
         loss['Temperature'] = TODO
 
+        self.training_step += 1
         return loss
 
     def add_to_replay_buffer(self, paths):
