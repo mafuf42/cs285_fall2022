@@ -56,15 +56,12 @@ class SACCritic(nn.Module, BaseCritic):
 
     def forward(self, obs: torch.Tensor, action: torch.Tensor):
         # TODO: return the two q values
-        observations = torch.cat([obs, action], dim=1)
-        print(obs.shape)
-        print(action.shape)
-        print(observations.shape)
+        observations = torch.cat((obs, action), dim=1)
 
-        q1_value = self.Q1(observations)
-        q2_value = self.Q2(observations)
+        q1_t = self.Q1(observations)
+        q2_t = self.Q2(observations)
 
-        values = [q1_value, q2_value]
+        values = (q1_t, q2_t)
         return values
 
 
